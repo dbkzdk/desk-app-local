@@ -1,0 +1,1 @@
+import db from '../../utils/db';import {requireAdmin} from '../../utils/auth';export default defineEventHandler(e=>{const u=requireAdmin(e);return db.prepare('SELECT a.*,c.name category FROM applications a LEFT JOIN categories c ON c.id=a.category_id WHERE a.company_id=? ORDER BY a.name').all(u.companyId)})

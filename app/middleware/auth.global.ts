@@ -1,0 +1,1 @@
+export default defineNuxtRouteMiddleware(async to=>{if(to.path==='/login')return;try{await $fetch('/api/me',{headers:useRequestHeaders(['cookie'])})}catch{return navigateTo('/login')}})

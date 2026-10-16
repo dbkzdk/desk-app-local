@@ -1,0 +1,6 @@
+import crypto from 'node:crypto'; import db from './db'
+export function hashPassword(p:string,s=crypto.randomBytes(16).toString('hex')){return s+':'+crypto.scryptSync(p,s,64).toString('hex')}
+export function verifyPassword(p:string,v:string){const [s,h]=v.split(':');return crypto.timingSafeEqual(Buffer.from(h,'hex'),crypto.scryptSync(p,s,64))}
+export function sessionUser(event:any){const sid=getCookie(event,'appdesk_session'); if(!sid) throw createError({statusCode:401,statusMessage:'Login diperlukan'}); const u=db.prepare(`SELECT u.id,u.company_id companyId,u.name,u.email,u.role,c.name companyName,c.color FROM sessions s JOIN users u ON u.id=s.user_id JOIN companies c ON c.id=u.company_id WHERE s.id=? AND s.expires_at>datetime('now') AND u.active=1`).get(sid) as any; if(!u) throw createError({statusCode:401,statusMessage:'Sesi tidak valid'}); return u}
+export function requireAdmin(e:any){const u=sessionUser(e);if(!['COMPANY_ADMIN','PLATFORM_ADMIN'].includes(u.role))throw createError({statusCode:403,statusMessage:'Akses ditolak'});return u}
+export function validUrl(v:string){try{const u=new URL(v);return ['http:','https:'].includes(u.protocol)}catch{return false}}

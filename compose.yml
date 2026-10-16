@@ -1,0 +1,10 @@
+services:
+  appdesk:
+    build: .
+    ports: ["3000:3000"]
+    environment:
+      NUXT_SESSION_SECRET: "replace-this-secret"
+      DATABASE_PATH: "/app/data/appdesk.db"
+    volumes: ["appdesk_data:/app/data"]
+volumes:
+  appdesk_data:

@@ -1,0 +1,1 @@
+import {sessionUser} from '../utils/auth';export default defineEventHandler(e=>sessionUser(e))

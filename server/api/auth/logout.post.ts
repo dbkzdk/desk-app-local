@@ -1,0 +1,1 @@
+import db from '../../utils/db';export default defineEventHandler(e=>{const s=getCookie(e,'appdesk_session');if(s)db.prepare('DELETE FROM sessions WHERE id=?').run(s);deleteCookie(e,'appdesk_session',{path:'/'});return{ok:true}})
